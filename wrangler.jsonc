@@ -1,0 +1,10 @@
+{
+  "name": "gaga",
+  "compatibility_date": "2026-09-05",
+  "assets": {
+    "directory": "./dist"
+  },
+  "routes": [
+    { "pattern": "gaga.hexly.ai", "custom_domain": true }
+  ]
+}
