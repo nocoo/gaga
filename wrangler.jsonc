@@ -1,5 +1,6 @@
 {
   "name": "gaga",
+  "account_id": "d51a8fde361e4be31db17d8c56737c1f",
   "compatibility_date": "2026-09-05",
   "assets": {
     "directory": "./dist"
