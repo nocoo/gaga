@@ -1,9 +1,7 @@
 export const colors = {
-  background: '#f3f0e8',
   wall: '#eee7d6',
   wallSide: '#dedfc9',
   trim: '#fcf5df',
-  wood: '#c99d68',
   woodLight: '#e1bc87',
   woodDark: '#a8794d',
   sage: '#9da983',
@@ -14,8 +12,6 @@ export const colors = {
   peach: '#e8b99a',
   yellow: '#e8bd66',
   blue: '#92b5bc',
-  ink: '#514d3d',
-  pink: '#d9a7a3',
   skin: '#f0bd92',
   hair: '#40332c',
 };
