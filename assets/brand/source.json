@@ -1,0 +1,51 @@
+{
+	"study": "gaga/2026-09-07-01",
+	"finishing": "01",
+	"method": "generated",
+	"generationCalls": 1,
+	"nativeDimensions": [2048, 2048],
+	"sourceRevisionBefore": "b960a12ce78a579ac9e99c4b985aaf85d5b8c8aa",
+	"previous": {
+		"kind": "original",
+		"original": "/logos/originals/gaga.svg",
+		"sourcePath": "public/favicon.svg",
+		"sourceUrl": "https://github.com/nocoo/gaga/blob/b960a12ce78a579ac9e99c4b985aaf85d5b8c8aa/public/favicon.svg",
+		"modified": false,
+		"width": 64,
+		"height": 64,
+		"bytes": 465,
+		"sha256": "abfcdf4a83a692c90f0e3f9b40380fb3f3a701923291c7a45a71778386146995",
+		"thumbnail": "/logos/display/gaga-160.webp",
+		"display": "/logos/display/gaga-1024.webp"
+	},
+	"masters": {
+		"logo.png": {
+			"sha256": "3bbfa196509e08de9c0d0b1ac18e944e3414b7082e70740898a2a09f6ed8f076",
+			"width": 2048,
+			"height": 2048
+		},
+		"assets/brand/icon.png": {
+			"sha256": "31b3e11e13361cfc212148686bef79e26fcef9f0f942105fa7f82041953bcf43",
+			"width": 2048,
+			"height": 2048
+		},
+		"assets/brand/icon-rounded.png": {
+			"sha256": "2af9d62d79838bed81e6deaaa338565a4524f552c1954b201a29de9281467dbd",
+			"width": 2048,
+			"height": 2048
+		}
+	},
+	"roundedClearancePx": 183.5,
+	"acceptance": {
+		"decisionSource": "owner-delegated batch acceptance",
+		"ownerReviewedExactBytes": false,
+		"scope": "Named ten-project batch"
+	},
+	"review": "https://hexly.ai/logos/gaga",
+	"archive": "https://github.com/nocoo/hexly.ai/tree/main/artwork/logo-family/gaga/2026-09-07-01",
+	"model": "gpt-image-2",
+	"generation": {
+		"path": "raw/generated.png",
+		"sha256": "cfe8aeeef77bb7503a05f588f0232de2ed0df2e343c2b46e43e23b644feb07b7"
+	}
+}

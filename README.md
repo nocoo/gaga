@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="assets/brand/icon-rounded.png" alt="Gaga" width="128" height="128" />
+</p>
+
 <h1 align="center">Gaga</h1>
 
 <p align="center">
