@@ -4,112 +4,118 @@
 
 <h1 align="center">Gaga</h1>
 
+<p align="center">观察陶陶自由探索，或选一件玩具，陪他在三维小屋里玩耍。</p>
+
 <p align="center">
-  <strong>陶陶的小小世界</strong><br>
-  探索 · 玩具 · 3D 玩耍空间
+  <a href="https://gaga.hexly.ai">站点</a> ·
+  <a href="docs/README.en.md">English</a>
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/TypeScript-5-blue?logo=typescript&logoColor=white" alt="TypeScript" />
-  <img src="https://img.shields.io/badge/Three.js-0.180-000000?logo=threedotjs&logoColor=white" alt="Three.js" />
-  <img src="https://img.shields.io/badge/Vite-7-646cff?logo=vite&logoColor=white" alt="Vite" />
-  <img src="https://img.shields.io/badge/Cloudflare-Workers-f38020?logo=cloudflare&logoColor=white" alt="Cloudflare Workers" />
-  <img src="https://img.shields.io/badge/license-MIT-green" alt="MIT License" />
+  <img src="preview.jpg" width="720" alt="Gaga — 陶陶的小小世界" />
 </p>
-
-<p align="center">
-  <a href="https://gaga.hexly.ai"><img src="preview.jpg" width="720" alt="Gaga — 陶陶的小小世界" /></a>
-</p>
-
----
 
 ## 这是什么
 
-Gaga 是一个可以自由探索的网页 3D 玩耍空间。陶陶会自己选玩具、绕开障碍、走到互动位置，再做对应动作。不依赖前端框架，也不拉取远程模型。
+Gaga（陶陶的小小世界）是一个网页 3D 玩耍空间。虚拟角色陶陶会自己选择玩具、绕开障碍、走到互动位置，再做对应动作；你也可以点击玩具引导他。这里没有分数或通关任务。
 
-**核心思路**：房间、角色、玩具和音效都在本地生成，打开页面就能玩。
-
-线上：https://gaga.hexly.ai
+房间、角色、玩具和绘本插画由代码生成，行为使用本地规则、动作片段与 A* 寻路。Three.js 负责场景，普通 DOM 与 CSS 提供界面，不依赖远程模型服务或服务端计算。
 
 ## 功能
 
-- **开放房间** — 约 60 ㎡ 拼接爬爬垫，原创圆润微缩家具与日夜灯光
-- **8 类玩具** — 积木、绘本、轨道火车、布球、城堡爬架、木马、木琴、套圈
-- **自主探索** — A* 寻路、互动排队；城堡可攀爬、走绳网、滑滑梯
-- **本地足迹** — 当天探索记录存在 `localStorage`，可选轻音乐与木琴音效（默认静音）
+- 在积木、绘本、轨道火车、布球、城堡爬架、木马、木琴与套圈之间自主探索或指定下一站。
+- 玩具与角色动作同步：翻书、堆积木、敲木琴、骑木马，以及爬城堡、过绳网和滑滑梯。
+- 拖动或自动旋转视角，缩放场景、近距离跟随角色，背面的墙会随视角隐藏。
+- 切换昼夜灯光，手动开启默认静音的环境音乐与玩具音效。
+- 在「探索足迹」查看当天的虚拟玩具访问记录，在玩具百宝箱按活动类型筛选。
+- 支持触屏旋转与捏合缩放；系统启用「减少动态效果」时，首次进入保持暂停。
 
-## 操作
+当天足迹存于当前浏览器的 localStorage，重新加载可保留当天发现。它不保存角色当前位置或进行中的动作，也没有账号或云端同步；旧日期记录会在载入与继续玩耍时过滤。
+
+## 使用
+
+在支持 WebGL 2、已开启硬件加速的现代浏览器中打开[站点](https://gaga.hexly.ai)。陶陶会自行探索，也可点击场景中的玩具或打开「玩具百宝箱」。
 
 | 操作 | 效果 |
 | --- | --- |
-| 拖动画面 / 单指拖动 | 旋转视角；背面的墙会自动隐藏 |
-| 滚轮 / 双指捏合 / `+` `−` | 放大、缩小 |
+| 拖动画面 / 单指拖动 | 旋转视角 |
+| 滚轮 / 双指捏合 / 缩放按钮 | 放大、缩小 |
 | 点击玩具 / 玩具百宝箱 | 引导陶陶去玩 |
-| 点击陶陶头像 | 近距离跟随，再点一次返回全景 |
-| `Space` | 暂停或继续 |
-| `R` | 恢复初始视角 |
-| `T` | 打开玩具百宝箱 |
-| `M` | 开关环境音乐 |
-| `N` | 切换昼夜 |
+| 点击陶陶头像 | 切换近距离跟随与全景 |
+| Space | 暂停或继续 |
+| R | 恢复初始视角 |
+| T | 打开玩具百宝箱 |
+| M | 开关环境音乐 |
+| N | 切换昼夜 |
 
-在城堡上或骑木马时选择下一件玩具，会先完成当前互动、回到地面，再出发。系统设置为「减少动态效果」时，初始为暂停状态。
-
-## 项目结构
-
-```text
-src/
-  main.ts                 # 启动、错误处理、HMR 生命周期
-  style.css               # 界面、响应式、昼夜
-  world/
-    Playroom.ts           # 渲染、相机、拾取、灯光
-    room.ts               # 房间与静态家具
-    toys/                 # 8 类玩具模型与注册表
-    navigation.ts         # A* 寻路
-  character/
-    Taotao.ts             # 角色建模与关节
-    Explorer.ts           # 自主选择、步行、互动
-    actions.ts            # 互动动作片段
-  audio/Soundscape.ts     # 本地合成的轻音乐和玩具音效
-  ui/AppUI.ts             # 控件、状态和探索足迹
-scripts/
-  smoke.mjs               # 桌面和触摸设备的浏览器检查
-```
-
-## 技术栈
-
-| 层 | 技术 |
-| --- | --- |
-| 语言 | [TypeScript](https://www.typescriptlang.org/) |
-| 渲染 | [Three.js](https://threejs.org/) |
-| 构建 | [Vite 7](https://vite.dev/) |
-| 发布 | [Cloudflare Workers](https://developers.cloudflare.com/workers/) 静态资源 |
-
-模型、贴图、插画和字体均在本地提供或生成。需要支持 WebGL 2 的现代浏览器。场景、角色与绘本插画为原创程序化素材。DM Sans 字体使用 SIL Open Font License，见 `public/fonts/OFL.txt`。
+城堡和木马互动中选择其他玩具时，会先把下一站排队，完成当前动作并回到地面后再出发。选择玩具也会让暂停中的陶陶继续活动。
 
 ## 开发
 
-需要 Node.js 20.19+ 或 22.12+。
+需要 Node.js 20.19+ 或 22.12+ 与 npm；浏览器需支持 WebGL 2。
 
 ```bash
-npm install
-npm run dev         # 默认 http://localhost:5177
-npm run typecheck
-npm run build
-npm run preview     # 默认端口 4177
-npm run test:e2e
-npm run deploy      # 构建并发布到 gaga.hexly.ai
+git clone https://github.com/nocoo/gaga.git
+cd gaga
+npm ci
+npm run dev
 ```
 
-浏览器检查优先使用本机 Chrome。没有 Chrome 时先运行 `npx playwright install chromium`。检查截图放在 `artifacts/`。
+开发默认地址为 `http://localhost:5177`，预览默认使用 4177；端口占用时以终端输出为准。应用不需要环境变量或数据库，字体与站点图像随静态资源提供。
 
-开发模式提供 `window.__TAOTAO__` 诊断接口，生产构建中不会出现。
+```bash
+npm run typecheck
+npm run build
+npm run preview
+```
+
+构建输出在 `dist/`，当前通过 Cloudflare Workers Static Assets 托管。Worker 名称为 `gagaya`，域名与资源配置见 [wrangler.jsonc](wrangler.jsonc)。仓库的 `npm run deploy` 需要单独准备 Wrangler CLI 与 Cloudflare 访问权限，Wrangler 当前未列入项目依赖。
+
+开发模式提供 `window.__TAOTAO__` 诊断接口，生产构建不会导出它。
+
+| 路径 | 内容 |
+| --- | --- |
+| `src/main.ts`、`src/ui`、`src/style.css` | 启动、错误提示、界面与足迹 |
+| `src/world` | 渲染、相机、房间、拾取与寻路 |
+| `src/world/toys` | 玩具模型、互动路径与注册表 |
+| `src/character` | 角色、探索逻辑与动作片段 |
+| `src/audio/Soundscape.ts` | 合成音乐与玩具音效 |
+| `scripts/smoke.mjs` | 浏览器流程检查 |
 
 ## 测试
 
-| 层 | 内容 | 触发时机 |
-| --- | --- | --- |
-| 浏览器 | 玩具路线、动作、攀爬、拾取、暂停、相机、昼夜、声音、足迹、HMR、触屏 | `npm run test:e2e` |
+```bash
+npx playwright install chromium
+npm run test:e2e
+```
 
-## License
+脚本默认自动启动仅监听 `127.0.0.1` 的临时 Vite 服务，使用系统分配的端口。优先使用本机 Chrome / Chromium，找不到时使用 Playwright Chromium；可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE` 指定浏览器路径。
 
-[MIT](LICENSE) © 2026
+截图写入 `artifacts/`。`PLAYWRIGHT_BASE_URL` 只应用于已有的开发服务器；此测试依赖开发诊断接口，不能指向生产预览，使用外部服务时也不会检查热更新。
+
+仓库没有独立单元或 API 测试命令；当前 CI 执行类型检查与构建，浏览器流程需单独运行。
+
+## 技术栈
+
+![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
+![Three.js](https://img.shields.io/badge/Three.js-000000?logo=threedotjs&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
+![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?logo=cloudflare&logoColor=white)
+
+| 部分 | 实现 |
+| --- | --- |
+| 场景与角色 | TypeScript、Three.js、WebGL 2、Canvas 纹理 |
+| 界面 | DOM、CSS、SVG |
+| 音频与足迹 | Web Audio、localStorage |
+| 构建与托管 | Vite、Cloudflare Workers Static Assets |
+| 浏览器测试 | Playwright |
+
+## 文档
+
+- [品牌素材说明](assets/brand/README.md)
+- [标识设计](https://hexly.ai/logos/gaga)
+- [玩具注册表](src/world/toys/index.ts)与[动作定义](src/character/actions.ts)
+
+## 许可证
+
+[MIT](LICENSE) © 2026 Zheng Li。DM Sans 字体使用 [SIL Open Font License](public/fonts/OFL.txt)。
