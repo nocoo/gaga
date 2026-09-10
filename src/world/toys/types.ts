@@ -20,7 +20,6 @@ export interface ToyDefinition {
   id: ToyId;
   name: string;
   subtitle: string;
-  description: string;
   category: ToyCategory;
   color: string;
   icon: string;
@@ -28,7 +27,6 @@ export interface ToyDefinition {
   position: [number, number, number];
   approach: [number, number];
   lookAt: [number, number];
-  labelHeight: number;
   obstacles: Obstacle[];
   create: (definition: ToyDefinition) => ToyModel;
 }
