@@ -5,7 +5,8 @@
   "main": "worker.js",
   "assets": {
     "directory": "./dist",
-    "binding": "ASSETS"
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/live"]
   },
   "routes": [
     { "pattern": "gaga.hexly.ai", "custom_domain": true }
