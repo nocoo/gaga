@@ -22,4 +22,3 @@ jobs:
           "lint": "project has no lint script; previous CI used a no-op lint-command",
           "unit": "previous CI used a no-op test-command; no unit suite is wired"
         }
-    secrets: inherit
