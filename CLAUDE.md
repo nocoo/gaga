@@ -58,7 +58,7 @@ No `lint` or unit-test script.
 ## Verification
 
 Status: `enforced` | `planned` | `manual` | `N/A`.
-6DQ = L1/L2/L3 + G1/G2 + D1. Required L1 bar is four metrics each ≥ 95%.
+6DQ = L1/L2/L3 + G1/G2 + D1. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests.
 
 | Change | Proof | Status | Evidence |
 |---|---|---|---|
@@ -67,7 +67,7 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 | UI path | L3 Playwright smoke | planned | `test:e2e` exists; **not** in CI |
 | Types / lint | G1 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
 | Deps / secrets | G2 osv-scanner + gitleaks | enforced | quality.yml default `security: true` |
-| Test isolation | D1 ephemeral Vite; SQLite marker | N/A | No database. `scripts/smoke.mjs` default context. `PLAYWRIGHT_BASE_URL` can skip local server — do not set it to production |
+| Test isolation | D1 fresh browser state and a guarded local target | planned | Smoke launches a fresh browser and defaults to an ephemeral loopback Vite server. `PLAYWRIGHT_BASE_URL` bypasses that server without a local-target guard. SQLite/`_test_marker` are N/A because there is no database |
 | Bundler output | `bun run build` | enforced | CI `prepare-command` |
 | Docs | README if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `release.yml` + curl live `https://gaga.hexly.ai/` |
