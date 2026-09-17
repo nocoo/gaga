@@ -67,10 +67,12 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 | UI path | L3 Playwright smoke | planned | `test:e2e` exists; **not** in CI |
 | Types / lint | G1 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
 | Deps / secrets | G2 osv-scanner + gitleaks | enforced | quality.yml default `security: true` |
-| Test isolation | D1 local smoke, never prod | planned | smoke uses ephemeral Vite unless `PLAYWRIGHT_BASE_URL` is set — do not point that at production |
+| Test isolation | D1 ephemeral Vite; SQLite marker | N/A | No database. `scripts/smoke.mjs` default context. `PLAYWRIGHT_BASE_URL` can skip local server — do not set it to production |
 | Bundler output | `bun run build` | enforced | CI `prepare-command` |
 | Docs | README if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `release.yml` + curl live `https://gaga.hexly.ai/` |
+
+No husky. Target (unmeasured): pre-commit G1+L1 on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
 
 ## Resources / Isolation
 
@@ -78,7 +80,7 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 |---|---|---|
 | Dev | 5177 Vite | local |
 | Preview | 4177 | local |
-| L3 smoke | random Vite port | local; no persist-to |
+| L3 smoke | random Vite port | local browser; no SQLite |
 
 E2E never touches prod data stores. Do not deploy remote `-test` Workers.
 
