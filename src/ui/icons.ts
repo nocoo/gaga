@@ -11,7 +11,6 @@ const paths: Record<string, string> = {
   home: '<path d="m3 10 9-7 9 7v10a1 1 0 0 1-1 1h-5v-7H9v7H4a1 1 0 0 1-1-1V10Z"/>',
   expand: '<path d="M8 3H3v5m13-5h5v5M3 16v5h5m13-5v5h-5"/>',
   close: '<path d="m6 6 12 12M6 18 18 6"/>',
-  chevron: '<path d="m9 5 7 7-7 7"/>',
   arrow: '<path d="M4 12h16m-6-6 6 6-6 6"/>',
   sparkle: '<path d="m12 3 2.4 6.6L21 12l-6.6 2.4L12 21l-2.4-6.6L3 12l6.6-2.4L12 3Zm7-1 1 3 3 1-3 1-1 3-1-3-3-1 3-1 1-3Z"/>',
   leaf: '<path d="M20 4C7 2 2 8 5 15c3 7 15 4 15-11ZM4 21 15 9"/>',
