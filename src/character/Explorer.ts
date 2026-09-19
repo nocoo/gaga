@@ -9,11 +9,9 @@ export interface ExplorerState {
   running: boolean;
   mode: 'idle' | 'walking' | 'playing';
   toy: ToyInstance | null;
-  queued: ToyInstance | null;
   label: string;
   thought: string;
   progress: number;
-  discoveries: number;
 }
 
 export class Explorer {
@@ -130,11 +128,10 @@ export class Explorer {
   get state(): ExplorerState {
     const action = this.current ? actions[this.current.action] : null;
     return {
-      running: this.running, mode: this.mode, toy: this.current, queued: this.queued,
+      running: this.running, mode: this.mode, toy: this.current,
       label: !this.running ? '让快乐，停留一会儿' : this.mode === 'walking' ? `去找${this.current?.name ?? '新玩具'}` : this.mode === 'playing' ? action!.label : '看看，接下来玩什么呢',
       thought: !this.running ? '休息一下下' : this.mode === 'walking' ? '发现好玩的啦！' : this.mode === 'playing' ? action!.thought : '你好呀，我是陶陶',
       progress: this.mode === 'walking' ? 1 - this.distanceRemaining / Math.max(.01, this.routeLength) : this.progress,
-      discoveries: this.visited.size,
     };
   }
 }
