@@ -2,7 +2,7 @@
 
 In-browser 3D play space: Taotao explores toys in a generated room (no scores).
 Profile: ts-worker-web
-Direction: [README.md](README.md). Frameworks must not rewrite this file.
+Human overview: [README.md](README.md). Frameworks must not rewrite this file. Maintain this root `AGENTS.md` as the only project handbook; do not create a `CLAUDE.md` alias, copy or import.
 
 ## Sources of Truth
 
@@ -58,21 +58,21 @@ No `lint` or unit-test script.
 ## Verification
 
 Status: `enforced` | `planned` | `manual` | `N/A`.
-6DQ = L1/L2/L3 + G1/G2 + D1. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests.
+6DQ = L1/L2/L3 + G2 + D1; the former G1 dimension was merged into L1 on 2026-09-21. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests; plus check-only strict types and lint with zero errors and warnings.
 
 | Change | Proof | Status | Evidence |
 |---|---|---|---|
 | Logic | L1 coverage ≥ 95% four metrics | planned | CI `unit: false` ("no unit suite is wired"); no vitest |
+| Types / lint (L1 static) | 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
 | API / schema | L2 real HTTP 100% | N/A | no application API beyond static `/api/live` |
 | UI path | L3 Playwright smoke | planned | `test:e2e` exists; **not** in CI |
-| Types / lint | G1 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
 | Deps / secrets | G2 osv-scanner + gitleaks | enforced | quality.yml default `security: true` |
 | Test isolation | D1 fresh browser state and a guarded local target | planned | Smoke launches a fresh browser and defaults to an ephemeral loopback Vite server. `PLAYWRIGHT_BASE_URL` bypasses that server without a local-target guard. SQLite/`_test_marker` are N/A because there is no database |
 | Bundler output | `bun run build` | enforced | CI `prepare-command` |
 | Docs | README if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `release.yml` + curl live `https://gaga.hexly.ai/` |
 
-No husky. Target (unmeasured): pre-commit G1+L1 on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
+No husky. Target (unmeasured): pre-commit unified L1 (types, check-only lint, coverage) on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
 
 ## Resources / Isolation
 
