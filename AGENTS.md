@@ -64,7 +64,7 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 |---|---|---|---|
 | Logic | L1 coverage ≥ 95% four metrics | planned | CI `unit: false` ("no unit suite is wired"); no vitest |
 | Types / lint (L1 static) | 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
-| API / schema | L2 real HTTP 100% | N/A | no application API beyond static `/api/live` |
+| API / schema | L2 real HTTP 100% | planned | `worker.js` rewrites `/api/live` → `/api/live.json`, delegates to `env.ASSETS.fetch`, propagates status and sets `Content-Type: application/json` + `Cache-Control: no-store`; no local HTTP L2 runner verifies this contract. Business CRUD remains N/A — no application API beyond the health route |
 | UI path | L3 Playwright smoke | planned | `test:e2e` exists; **not** in CI |
 | Deps / secrets | G2 osv-scanner + gitleaks | enforced | quality.yml default `security: true` |
 | Test isolation | D1 fresh browser state and a guarded local target | planned | Smoke launches a fresh browser and defaults to an ephemeral loopback Vite server. `PLAYWRIGHT_BASE_URL` bypasses that server without a local-target guard. SQLite/`_test_marker` are N/A because there is no database |
