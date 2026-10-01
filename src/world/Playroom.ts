@@ -149,7 +149,7 @@ export class Playroom {
     this.explorer.onVisit = toy => { this.ui.visit(toy); this.sound.chime(2); };
     this.ui.setLoading(88, '陶陶准备好啦，你呢？'); await nextFrame();
     this.scene.updateMatrixWorld(true);
-    this.toys.forEach(toy => toy.model.update?.({ time: 0, delta: 0, active: false, progress: 0, elapsed: 0 }));
+    this.toys.forEach(toy => toy.model.update?.({ time: 0, delta: 0, active: false, elapsed: 0 }));
     await this.renderer.compileAsync(this.scene, this.camera);
     if (this.disposed) return;
     this.initialized = true;
@@ -228,7 +228,7 @@ export class Playroom {
     this.room.update(time);
     for (const toy of this.toys) {
       const active = this.explorer.mode === 'playing' && this.explorer.current?.id === toy.id;
-      toy.model.update?.({ time, delta: this.explorer.running ? delta : 0, active, progress: active ? this.explorer.progress : 0, elapsed: active ? this.explorer.elapsed : 0, hands: active ? hands : undefined });
+      toy.model.update?.({ time, delta: this.explorer.running ? delta : 0, active, elapsed: active ? this.explorer.elapsed : 0, hands: active ? hands : undefined });
       const material = toy.marker.material as THREE.MeshBasicMaterial;
       const highlighted = this.hover === toy || (this.explorer.current === toy && this.explorer.mode === 'walking');
       material.opacity = THREE.MathUtils.damp(material.opacity, highlighted ? .67 : 0, 7, delta);

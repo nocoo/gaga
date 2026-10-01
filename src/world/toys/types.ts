@@ -6,7 +6,7 @@ export type ToyCategory = '想象力' | '动起来' | '慢时光';
 
 export interface Obstacle { x: number; z: number; width: number; depth: number }
 export interface ToyUpdate {
-  time: number; delta: number; active: boolean; progress: number; elapsed: number;
+  time: number; delta: number; active: boolean; elapsed: number;
   hands?: { left: THREE.Vector3; right: THREE.Vector3 };
 }
 export interface ToyModel {
