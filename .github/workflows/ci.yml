@@ -15,6 +15,7 @@ jobs:
       install-policy: "project"
       prepare-command: "bun run build"
       typecheck-command: "bun run typecheck"
+      lockfiles: "bun.lock,package-lock.json"
       lint: false
       unit: false
       disabled-check-reasons: |-

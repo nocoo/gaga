@@ -3,7 +3,7 @@
   "configVersion": 0,
   "workspaces": {
     "": {
-      "name": "taotao-little-world",
+      "name": "gaga",
       "dependencies": {
         "three": "^0.186.1",
       },
