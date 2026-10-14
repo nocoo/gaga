@@ -20,73 +20,14 @@ permissions:
   actions: read
 
 jobs:
-  locked-wrangler:
-    name: Read locked Wrangler
-    if: >-
-      github.event_name == 'push' ||
-      github.event_name == 'workflow_dispatch' ||
-      (github.event.workflow_run.conclusion == 'success' &&
-       github.event.workflow_run.head_branch == 'main')
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    outputs:
-      wrangler-version: ${{ steps.lockfile.outputs.wrangler-version }}
-    steps:
-      - name: Checkout lockfiles
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-        with:
-          persist-credentials: false
-          ref: ${{ github.event_name == 'workflow_run' && github.event.workflow_run.head_sha || github.event_name == 'workflow_dispatch' && inputs.tag || github.sha }}
-      - name: Read Wrangler version from lockfiles
-        id: lockfile
-        run: |
-          python3 - <<'PY'
-          import os
-          import json
-          import pathlib
-          import re
-          import sys
-
-          bun_text = pathlib.Path("bun.lock").read_text(encoding="utf-8")
-          bun_match = re.search(r'"wrangler":\s*\[\s*"wrangler@([^"]+)"', bun_text)
-          if not bun_match:
-              print("::error::wrangler is not locked in bun.lock", file=sys.stderr)
-              sys.exit(1)
-          bun_version = bun_match.group(1)
-
-          lock = json.loads(pathlib.Path("package-lock.json").read_text(encoding="utf-8"))
-          npm_entry = lock.get("packages", {}).get("node_modules/wrangler") or {}
-          npm_version = npm_entry.get("version", "")
-          if not npm_version:
-              print("::error::wrangler is not locked in package-lock.json", file=sys.stderr)
-              sys.exit(1)
-
-          if bun_version != npm_version:
-              print(
-                  f"::error::lockfile wrangler mismatch: bun.lock={bun_version} package-lock.json={npm_version}",
-                  file=sys.stderr,
-              )
-              sys.exit(1)
-
-          exact = re.compile(r"^[0-9]+\.[0-9]+\.[0-9]+(?:[.-][A-Za-z0-9.-]+)?$")
-          if not exact.match(bun_version):
-              print(f"::error::locked wrangler version is not exact: {bun_version}", file=sys.stderr)
-              sys.exit(1)
-
-          print(f"Locked wrangler {bun_version}")
-          with open(os.environ["GITHUB_OUTPUT"], "a", encoding="utf-8") as fh:
-              fh.write(f"wrangler-version={bun_version}\n")
-          PY
-
   deploy:
     name: Deploy Worker
-    needs: locked-wrangler
     if: >-
       github.event_name == 'push' ||
       github.event_name == 'workflow_dispatch' ||
       (github.event.workflow_run.conclusion == 'success' &&
        github.event.workflow_run.head_branch == 'main')
-    uses: nocoo/base-ci/.github/workflows/deploy-worker.yml@ad43150de3a2be2fa464b5cd2f921dc4fa9f8f0f
+    uses: nocoo/base-ci/.github/workflows/deploy-worker.yml@0394178ebcff0418c442d84a84119220f31f8987 # v2026.9
     with:
       expected-workflow-path: ".github/workflows/ci.yml"
       expected-workflow-name: "CI"
@@ -96,7 +37,6 @@ jobs:
       runtime-version: "1.4.0"
       install-policy: "project"
       build-command: bun run build
-      wrangler-version: ${{ needs.locked-wrangler.outputs.wrangler-version }}
       environment: production
       concurrency-group: deploy-gaga-production
       timeout-minutes: 15
