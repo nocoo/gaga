@@ -80,20 +80,6 @@ npm run preview
 | `src/world/toys` | 玩具模型、互动路径与注册表 |
 | `src/character` | 角色、探索逻辑与动作片段 |
 | `src/audio/Soundscape.ts` | 合成音乐与玩具音效 |
-| `scripts/smoke.mjs` | 浏览器流程检查 |
-
-## 测试
-
-```bash
-npx playwright install chromium
-npm run test:e2e
-```
-
-脚本默认自动启动仅监听 `127.0.0.1` 的临时 Vite 服务，使用系统分配的端口。优先使用本机 Chrome / Chromium，找不到时使用 Playwright Chromium；可通过 `PLAYWRIGHT_CHROMIUM_EXECUTABLE` 指定浏览器路径。
-
-截图写入 `artifacts/`。`PLAYWRIGHT_BASE_URL` 只应用于已有的开发服务器；此测试依赖开发诊断接口，不能指向生产预览，使用外部服务时也不会检查热更新。
-
-仓库没有独立单元或 API 测试命令；当前 CI 执行类型检查与构建，浏览器流程需单独运行。
 
 ## 技术栈
 
@@ -108,7 +94,6 @@ npm run test:e2e
 | 界面 | DOM、CSS、SVG |
 | 音频与足迹 | Web Audio、localStorage |
 | 构建与托管 | Vite、Cloudflare Workers Static Assets |
-| 浏览器测试 | Playwright |
 
 ## 文档
 
