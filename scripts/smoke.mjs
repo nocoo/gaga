@@ -33,10 +33,12 @@ async function shot(page, path) {
 }
 const state = page => page.evaluate(() => window.__TAOTAO__.state());
 const advance = (page, seconds) => page.evaluate(seconds => window.__TAOTAO__.advance(seconds), seconds);
+const uiClick = (page, selector) => page.locator(selector).click({ noWaitAfter: true });
+
 async function choose(page, toy) {
-  await page.locator('#toy-box').click();
-  await page.locator(`[data-filter="全部"]`).click();
-  await page.locator(`[data-toy="${toy}"]`).click();
+  await uiClick(page, '#toy-box');
+  await uiClick(page, '[data-filter="全部"]');
+  await uiClick(page, `[data-toy="${toy}"]`);
 }
 async function arrive(page, toy) {
   for (let i = 0; i < ARRIVE_LOOPS; i++) {
@@ -59,48 +61,48 @@ try {
   assert.deepEqual(routes.filter(route => !route.reachable || !route.clear), []);
   console.log('✓ Scene initialized without WebGL errors; all 64 toy routes are reachable and clear.');
 
-  await page.locator('#pause').click();
+  uiClick(page, '#pause');
   const paused = await state(page);
   await page.waitForTimeout(350);
   assert.equal((await state(page)).time, paused.time);
   assert.deepEqual((await state(page)).position, paused.position);
-  await page.locator('#zoom-in').click();
+  uiClick(page, '#zoom-in');
   assert.ok((await state(page)).zoom > 1);
-  await page.locator('#zoom-out').click();
+  uiClick(page, '#zoom-out');
   assert.ok(Math.abs((await state(page)).zoom - 1) < .001);
   const beforeDrag = (await state(page)).camera;
   await page.mouse.move(860, 575);
   await page.mouse.down(); await page.mouse.move(1040, 590, { steps: 12 }); await page.mouse.up();
   assert.notDeepEqual((await state(page)).camera, beforeDrag);
-  await page.locator('#reset').click();
+  uiClick(page, '#reset');
   await page.waitForFunction(() => {
     const s = window.__TAOTAO__.state();
     return Math.abs(s.zoom - 1) < .001 && s.camera.every((n, i) => Math.abs(n - [13, 13.5, 16][i]) < .02);
   });
-  await page.locator('#character-focus').click();
+  uiClick(page, '#character-focus');
   await page.waitForFunction(() => window.__TAOTAO__.state().zoom > 1.8);
   assert.equal((await state(page)).following, true);
   await shot(page, 'artifacts/taotao-close.png');
-  await page.locator('#reset').click();
+  uiClick(page, '#reset');
   await page.waitForFunction(() => Math.abs(window.__TAOTAO__.state().zoom - 1) < .001);
-  await page.locator('#night').click();
+  uiClick(page, '#night');
   assert.equal((await state(page)).night, true);
   await page.waitForTimeout(ci ? 500 : 1400);
   await shot(page, 'artifacts/night.png');
-  await page.locator('#night').click();
-  await page.locator('#sound').click();
+  uiClick(page, '#night');
+  uiClick(page, '#sound');
   await page.waitForFunction(() => window.__TAOTAO__.state().sound);
-  await page.locator('#sound').click();
+  uiClick(page, '#sound');
   assert.equal((await state(page)).sound, false);
   console.log('✓ Pause freezes the simulation; zoom, orbit, reset, close follow, night and audio controls work.');
 
-  await page.locator('#toy-box').click();
+  uiClick(page, '#toy-box');
   assert.equal(await page.locator('.toy-card').count(), 8);
-  await page.locator('[data-filter="慢时光"]').click();
+  uiClick(page, '[data-filter="慢时光"]');
   assert.equal(await page.locator('.toy-card').count(), 2);
-  await page.locator('[data-filter="动起来"]').click();
+  uiClick(page, '[data-filter="动起来"]');
   assert.equal(await page.locator('.toy-card').count(), 3);
-  await page.locator('[data-filter="全部"]').click();
+  uiClick(page, '[data-filter="全部"]');
   await shot(page, 'artifacts/toybox.png');
   await page.keyboard.press('Escape');
   assert.equal(await page.locator('#toy-dialog').evaluate(dialog => dialog.open), false);
@@ -149,7 +151,7 @@ try {
   await arrive(page, 'ball');
   assert.ok(Math.abs((await state(page)).position[1] - .19) < .01);
   assert.equal((await state(page)).visits.length, 8);
-  await page.locator('#journal-open').click();
+  uiClick(page, '#journal-open');
   assert.ok(await page.locator('.journal-entry').count() >= 8);
   await page.keyboard.press('Escape');
   console.log('✓ Castle climb, bridge crossing, slide, safe activity queuing and daily discovery journal work.');
@@ -204,7 +206,7 @@ try {
   await reduced.goto(baseURL, { waitUntil: 'networkidle' });
   await ready(reduced, ci ? 90_000 : 45_000);
   assert.equal((await state(reduced)).running, false, 'Respect reduced motion on first load');
-  await reduced.locator('#pause').click();
+  uiClick(reduced, '#pause');
   assert.equal((await state(reduced)).running, true);
   assert.deepEqual(errors, [], 'Browser should not report application or WebGL errors');
   console.log('✓ Reduced-motion preference is respected. No browser errors.');
