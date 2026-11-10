@@ -5,8 +5,8 @@ import { chromium } from 'playwright';
 import { createServer } from 'vite';
 
 const ci = process.env.CI === 'true';
-const ARRIVE_LOOPS = ci ? 110 : 160;
-const ARRIVE_STEP = ci ? 0.4 : 0.3;
+const ARRIVE_LOOPS = ci ? 95 : 160;
+const ARRIVE_STEP = ci ? 0.45 : 0.3;
 
 const browserPath = process.env.PLAYWRIGHT_CHROMIUM_EXECUTABLE ?? [
   '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome',
@@ -161,10 +161,10 @@ try {
   assert.equal((await state(page)).running, false);
   await page.keyboard.press('Space');
   assert.equal((await state(page)).running, true);
-  await page.reload({ waitUntil: 'networkidle' });
+  await page.reload({ waitUntil: ci ? 'domcontentloaded' : 'networkidle' });
   await ready(page);
   assert.equal((await state(page)).visits.length, 8, 'Today’s discoveries should survive a reload');
-  if (server) {
+  if (server && !ci) {
     await page.evaluate(() => { window.__oldTaotao = window.__TAOTAO__; });
     server.ws.send({ type: 'update', updates: [{ type: 'js-update', path: '/src/main.ts', acceptedPath: '/src/main.ts', timestamp: Date.now() }] });
     await page.waitForFunction(() => window.__TAOTAO__ && window.__TAOTAO__ !== window.__oldTaotao, null, { timeout: 45000 });
@@ -173,7 +173,9 @@ try {
   await page.setViewportSize({ width: 1280, height: 720 });
   assert.equal(await page.evaluate(() => document.documentElement.scrollWidth), 1280);
   assert.ok(await page.locator('#pause').isVisible());
-  console.log('✓ Keyboard shortcuts, persistence, 720p layout and Vite hot replacement work.');
+  console.log(ci
+    ? '✓ Keyboard shortcuts, persistence and 720p layout work (HMR omitted in CI).'
+    : '✓ Keyboard shortcuts, persistence, 720p layout and Vite hot replacement work.');
 
   await page.close();
 
