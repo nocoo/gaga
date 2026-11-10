@@ -80,20 +80,6 @@ Development exposes the `window.__TAOTAO__` diagnostic interface. Production bui
 | `src/world/toys` | Toy models, interaction paths, and registry |
 | `src/character` | Character, exploration logic, and animation clips |
 | `src/audio/Soundscape.ts` | Synthesized music and toy sounds |
-| `scripts/smoke.mjs` | Browser journey checks |
-
-## Tests
-
-```bash
-npx playwright install chromium
-npm run test:e2e
-```
-
-The script starts a temporary Vite server listening only on `127.0.0.1`, using an automatically assigned port. It prefers a locally installed Chrome / Chromium and falls back to Playwright Chromium. Set `PLAYWRIGHT_CHROMIUM_EXECUTABLE` to choose a browser executable.
-
-Screenshots go to `artifacts/`. Use `PLAYWRIGHT_BASE_URL` only for an existing development server: the test depends on development diagnostics, cannot target a production preview, and does not check hot replacement with an external server.
-
-There are no separate unit or API test commands. Current CI runs type checking and builds; run browser journeys separately.
 
 ## Stack
 
@@ -108,7 +94,6 @@ There are no separate unit or API test commands. Current CI runs type checking a
 | Interface | DOM, CSS, SVG |
 | Audio and journal | Web Audio, localStorage |
 | Build and hosting | Vite, Cloudflare Workers Static Assets |
-| Browser tests | Playwright |
 
 ## Documentation
 

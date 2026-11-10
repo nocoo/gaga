@@ -13,7 +13,7 @@ This file is the **contract**. Hooks, CI, and config are **enforcement**. If the
 | Agent handbook | this file |
 | Human docs | README.md, `docs/README.en.md` |
 | Version | `package.json` `"version"` as `1.2.3`, display `v1.2.3` |
-| Enforcement | `.github/workflows/ci.yml`, `scripts/smoke.mjs` |
+| Enforcement | `.github/workflows/ci.yml` |
 | Machine rules | global `AGENTS.md`, `rules/git-commit.md` |
 | Accidents | [Retrospective.md](Retrospective.md) |
 | Env files | none required |
@@ -34,11 +34,11 @@ This file is the **contract**. Hooks, CI, and config are **enforcement**. If the
 | Package manager | npm (`package-lock.json`) plus `bun.lock` |
 | Runtime | Vite :5177; Cloudflare Worker + assets |
 | Lint | none |
-| Tests | `scripts/smoke.mjs` Playwright chromium (not Vitest) |
+| Tests | none (no Vitest; L3 browser E2E removed — repo not actively maintained) |
 | Data | none (browser localStorage) |
 
 ```
-src/  public/  scripts/smoke.mjs
+src/  public/  scripts/resize-logos.py
 worker.js  wrangler.jsonc
 ```
 
@@ -49,11 +49,10 @@ npm install   # or bun install
 npm run dev                 # Vite --host, port 5177
 npm run typecheck           # tsc --noEmit
 npm run build               # tsc --noEmit && vite build
-npm run test:e2e            # node scripts/smoke.mjs (local Vite port 0, or PLAYWRIGHT_BASE_URL)
 npm run deploy              # build + wrangler deploy (owner only)
 ```
 
-No `lint` or unit-test script.
+No `lint`, unit-test, or browser E2E script.
 
 ## Verification
 
@@ -65,9 +64,9 @@ Status: `enforced` | `planned` | `manual` | `N/A`.
 | Logic | L1 coverage ≥ 95% four metrics | planned | CI `unit: false` ("no unit suite is wired"); no vitest |
 | Types / lint (L1 static) | 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
 | API / schema | L2 real HTTP 100% | planned | `worker.js` rewrites `/api/live` → `/api/live.json`, delegates to `env.ASSETS.fetch`, propagates status and sets `Content-Type: application/json` + `Cache-Control: no-store`; no local HTTP L2 runner verifies this contract. Business CRUD remains N/A — no application API beyond the health route |
-| UI path | L3 Playwright smoke | planned | `test:e2e` exists; **not** in CI |
+| UI path | L3 browser E2E | N/A | CI `L3: na`; no Playwright suite in repo |
 | Deps / secrets | G2 osv-scanner + gitleaks | enforced | quality.yml default `security: true` |
-| Test isolation | D1 fresh browser state and a guarded local target | planned | Smoke launches a fresh browser and defaults to an ephemeral loopback Vite server. `PLAYWRIGHT_BASE_URL` bypasses that server without a local-target guard. SQLite/`_test_marker` are N/A because there is no database |
+| Test isolation | D1 | N/A | no automated test runners wired |
 | Bundler output | `bun run build` | enforced | CI `prepare-command` |
 | Docs | README if behavior changed | manual | human review |
 | Release | version + Worker deploy | enforced | `release.yml` + curl live `https://gaga.hexly.ai/` |
@@ -80,9 +79,8 @@ No husky. Target (unmeasured): pre-commit unified L1 (types, check-only lint, co
 |---|---|---|
 | Dev | 5177 Vite | local |
 | Preview | 4177 | local |
-| L3 smoke | random Vite port | local browser; no SQLite |
 
-E2E never touches prod data stores. Do not deploy remote `-test` Workers.
+Do not deploy remote `-test` Workers.
 
 ## Operations / Release
 
@@ -99,5 +97,3 @@ E2E never touches prod data stores. Do not deploy remote `-test` Workers.
 | Project-specific rule that will recur | one line here (cap ~10) |
 | Cross-project lesson | nmem / global `AGENTS.md` / `rules/` |
 | Deterministically checkable rule | hook or test, not prose |
-
-- Do not set `PLAYWRIGHT_BASE_URL` to the production host for smoke.
