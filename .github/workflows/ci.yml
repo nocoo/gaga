@@ -1,3 +1,5 @@
+# CI slot standard v1 (nocoo/base-ci docs/slots.md): impl S1, S3, G1, G2, B1, L3, Z1 via quality.yml;
+# na S2, L1.5, L2, P1; todo L1 in slot-status. nocoo/base-ci v2026.12: top-level slot jobs, L3 browsers/artifacts.
 name: CI
 
 on:
@@ -7,19 +9,47 @@ on:
     branches: [main]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
 jobs:
   quality:
-    uses: nocoo/base-ci/.github/workflows/quality.yml@633a5545fcfec91b688840650d4edf3e9cc1abbd # v2026.10
+    uses: nocoo/base-ci/.github/workflows/quality.yml@1ea10ecab22b72512399485391603fe03a161016 # v2026.12
     with:
       runtime-version: "1.4.0"
-      install-policy: "project"
-      prepare-command: "bun run build"
-      typecheck-command: "bun run typecheck"
+      node-version: "26.12.1"
+      install-policy: project
       lockfiles: "bun.lock,package-lock.json"
+      typecheck-command: "bun run typecheck"
       lint: false
       unit: false
       disabled-check-reasons: |-
         {
-          "lint": "project has no lint script; previous CI used a no-op lint-command",
-          "unit": "previous CI used a no-op test-command; no unit suite is wired"
+          "lint": "package.json 无 lint 脚本",
+          "unit": "无 Vitest/单测套件；Playwright 冒烟在 L3"
         }
+      build: true
+      build-command: bun run build
+      workflow-lint: true
+      workflow-lint-required-workflow: nocoo/base-ci/.github/workflows/deploy-worker.yml
+      workflow-lint-yamllint: true
+      l3: true
+      l3-browsers: chromium
+      l3-command: bun run test:e2e
+      l3-artifact-name: browser-evidence
+      l3-artifact-path: artifacts/
+      l3-artifact-retention-days: 14
+      env-json: '{"CI": "true"}'
+      slot-status: >-
+        {"S1": {"status": "impl"},
+        "S2": {"status": "na", "reason": "package.json 无 lint 脚本或规则集"},
+        "S3": {"status": "impl"},
+        "G1": {"status": "impl"},
+        "G2": {"status": "impl"},
+        "B1": {"status": "impl"},
+        "L1": {"status": "todo", "reason": "尚无单元测试与覆盖率门禁；仅有 scripts/smoke.mjs"},
+        "L1.5": {"status": "na", "reason": "Worker 仅托管静态资源，无 vitest-pool-workers / miniflare 运行时套件"},
+        "L2": {"status": "na", "reason": "无在 CI 中对外 HTTP 打点的 API E2E；/api/live 仅由发布 verify-command 抽检"},
+        "L3": {"status": "impl"},
+        "P1": {"status": "na", "reason": "package.json 为 private，不发布 npm 包"},
+        "Z1": {"status": "impl"}}
