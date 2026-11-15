@@ -56,22 +56,24 @@ No `lint`, unit-test, or browser E2E script.
 
 ## Verification
 
-Status: `enforced` | `planned` | `manual` | `N/A`.
-6DQ = L1/L2/L3 + G2 + D1; the former G1 dimension was merged into L1 on 2026-09-21. Required L1 bar is statements/branches/functions/lines each ≥95%; no skipped or focused tests; plus check-only strict types and lint with zero errors and warnings.
+Quality follows System1 v1.3.0 Native Mode (`nocoo/base-ci v2026.15`) in `.github/workflows/quality-slots.yml` and `.github/workflows/ci.yml`. Status: `enforced` | `planned` | `manual` | `N/A`.
 
-| Change | Proof | Status | Evidence |
-|---|---|---|---|
-| Logic | L1 coverage ≥ 95% four metrics | planned | CI `unit: false` ("no unit suite is wired"); no vitest |
-| Types / lint (L1 static) | 0 error, 0 warning | planned | CI runs `typecheck`; `lint: false`; no husky |
-| API / schema | L2 real HTTP 100% | planned | `worker.js` rewrites `/api/live` → `/api/live.json`, delegates to `env.ASSETS.fetch`, propagates status and sets `Content-Type: application/json` + `Cache-Control: no-store`; no local HTTP L2 runner verifies this contract. Business CRUD remains N/A — no application API beyond the health route |
-| UI path | L3 browser E2E | N/A | CI `L3: na`; no Playwright suite in repo |
-| Deps / secrets | G2 osv-scanner + gitleaks | enforced | quality.yml default `security: true` |
-| Test isolation | D1 | N/A | no automated test runners wired |
-| Bundler output | `bun run build` | enforced | CI `prepare-command` |
-| Docs | README if behavior changed | manual | human review |
-| Release | version + Worker deploy | enforced | `release.yml` + curl live `https://gaga.hexly.ai/` |
+| Slot | Status | Evidence |
+| --- | --- | --- |
+| `S1` Types | enforced | `bun run typecheck` in CI |
+| `S2` Lint | N/A | No lint script configured |
+| `S3` Workflow | enforced | SHA-pinned workflow action check in CI |
+| `G1` Secrets | enforced | `gitleaks` scan in CI |
+| `G2` Dependencies | enforced | `osv-scanner` scan (`bun.lock`, `package-lock.json`) in CI |
+| `B1` Build | enforced | `bun run build` in CI |
+| `L1` Unit | planned | No unit suite wired |
+| `L2` Runtime | N/A | Static site; `/api/live` served via `worker.js` asset rewrite |
+| `L3` Integration | N/A | Static site without application API |
+| `L4` E2E | N/A | No Playwright suite in repo |
+| `P1` Package | N/A | Deployed as Cloudflare Worker, not an npm package |
+| `Z1` Gate | enforced | `quality / Z1: Gate` required status check on `main` |
 
-No husky. Target (unmeasured): pre-commit unified L1 (types, check-only lint, coverage) on index snapshot <30s; pre-push L2+G2 on stdin refs <3min. `--no-verify` forbidden.
+Docs remain `manual` review; release runs `release.yml` (`deploy-worker.yml`) and verifies live `https://gaga.hexly.ai/`. No husky hooks installed; `--no-verify` forbidden.
 
 ## Resources / Isolation
 
