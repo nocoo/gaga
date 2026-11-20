@@ -1,101 +1,51 @@
 # Gaga
 
-In-browser 3D play space: Taotao explores toys in a generated room (no scores).
-Profile: ts-worker-web
-Human overview: [README.md](README.md). Frameworks must not rewrite this file. Maintain this root `AGENTS.md` as the only project handbook; do not create a `CLAUDE.md` alias, copy or import.
-
-## Sources of Truth
-
-This file is the **contract**. Hooks, CI, and config are **enforcement**. If they disagree, that is a failure — raise enforcement to match this file; never lower the contract to a weaker hook.
-
-| Fact | Where |
-|---|---|
-| Agent handbook | this file |
-| Human docs | README.md, `docs/README.en.md` |
-| Version | `package.json` `"version"` as `1.2.3`, display `v1.2.3` |
-| Enforcement | `.github/workflows/ci.yml` |
-| Machine rules | global `AGENTS.md`, `rules/git-commit.md` |
-| Accidents | [Retrospective.md](Retrospective.md) |
-| Env files | none required |
-
-## Project Invariants
-
-- All behavior is local (rules, A*, generated art). No remote models or server-side simulation.
-- Worker (`worker.js`) only serves assets and `/api/live`. Do not add D1 or remote `-test` resources.
-- Daily footprints live in localStorage; position/in-progress actions are not persisted. No accounts.
-- Audio is muted until the user enables it. Honor `prefers-reduced-motion` on first visit.
-- Wrangler Worker name is `gagaya`; public host is `gaga.hexly.ai`.
-
-## Stack / Layout
-
-| Component | Choice |
-|---|---|
-| Language | TypeScript (`tsc --noEmit`) |
-| Package manager | npm (`package-lock.json`) plus `bun.lock` |
-| Runtime | Vite :5177; Cloudflare Worker + assets |
-| Lint | none |
-| Tests | none (no Vitest; L3 browser E2E removed — repo not actively maintained) |
-| Data | none (browser localStorage) |
-
-```
-src/  public/  scripts/resize-logos.py
-worker.js  wrangler.jsonc
-```
+In-browser 3D play space (Three.js, Vite, TypeScript) where Taotao explores toys in a generated room (no scores), deployed via Cloudflare Workers Static Assets.
+Docs: [README.md](README.md) · [English README](docs/README.en.md) · [Retrospective](Retrospective.md)
 
 ## Commands
 
-```bash
-npm install   # or bun install
-npm run dev                 # Vite --host, port 5177
-npm run typecheck           # tsc --noEmit
-npm run build               # tsc --noEmit && vite build
-npm run deploy              # build + wrangler deploy (owner only)
+Run from root with Bun or Node/npm (CI pins Bun/Node in [quality-slots.yml](.github/workflows/quality-slots.yml)). No `.env` file or database is required. Layout: `src/`, `public/`, `scripts/resize-logos.py`, `worker.js`, `wrangler.jsonc`.
+
+```sh
+bun install --frozen-lockfile   # or npm ci
+npm run dev                     # Vite --host, port 5177
+npm run preview                 # Vite preview --host, port 4177
+npm run typecheck               # S1: tsc --noEmit
+npm run build                   # B1: tsc --noEmit && vite build
+npm run deploy                  # build + wrangler deploy (owner only)
 ```
 
-No `lint`, unit-test, or browser E2E script.
+No `lint`, unit-test, or browser E2E script is configured.
 
-## Verification
+## Invariants
 
-Quality follows System1 v1.3.0 Native Mode (`nocoo/base-ci v2026.15`) in `.github/workflows/quality-slots.yml` and `.github/workflows/ci.yml`. Status: `enforced` | `planned` | `manual` | `N/A`.
+- All behavior is local (rules, A* pathfinding, generated art); never add remote models or server-side simulation.
+- `worker.js` only serves static assets and rewrites `/api/live` to `/api/live.json` (emitted by `vite.config.ts`). Do not add D1 or remote `-test` Workers/resources.
+- Daily footprints live in browser `localStorage`; character position and in-progress actions are not persisted, and there are no accounts.
+- Audio stays muted until the user enables it; honor `prefers-reduced-motion` on first visit (start paused).
+- Version source of truth is `package.json` `"version"` (`1.2.3`, displayed as `v1.2.3`); `window.__TAOTAO__` is dev-only.
+- Keep `bun.lock` and `package-lock.json` in sync when updating dependencies; CI `G2` scans both lockfiles.
+- Wrangler Worker name is `gagaya` ([wrangler.jsonc](wrangler.jsonc)); public custom domain is `gaga.hexly.ai` (`workers_dev` and `preview_urls` disabled).
+- Production deploy requires Cloudflare owner authorization via `npm run deploy`, tag `v*.*.*`, or [release.yml](.github/workflows/release.yml) (verifies live HTTP 200 on `https://gaga.hexly.ai/`).
 
-| Slot | Status | Evidence |
+## Quality & Local Gates
+
+Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (`quality / Z1: Gate` required on `main`, called by [.github/workflows/ci.yml](.github/workflows/ci.yml)). Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
+
+- **Enforced in CI**: `S1` (`bun run typecheck`), `S3` (SHA-pinned actions), `G1` (`gitleaks`), `G2` (`osv-scanner` on `bun.lock` + `package-lock.json`), `B1` (`bun run build`), `Z1` gate.
+- **Planned / manual**: `L1` Unit is `planned` (no unit suite wired); docs review is `manual`.
+- **N/A slots**: `S2` (no lint script), `L2`/`L3` (static asset app; `/api/live` is a Worker rewrite), `L4` (Playwright E2E removed; low-maintenance repo), `P1` (Cloudflare Worker, not an npm package).
+- **Local hooks**: none installed (no `.husky/` or `.githooks/`); run `npm run typecheck` and `npm run build` before committing, and never use `--no-verify`.
+
+## Resources & Isolation
+
+| Lane | Endpoint / State | Boundary |
 | --- | --- | --- |
-| `S1` Types | enforced | `bun run typecheck` in CI |
-| `S2` Lint | N/A | No lint script configured |
-| `S3` Workflow | enforced | SHA-pinned workflow action check in CI |
-| `G1` Secrets | enforced | `gitleaks` scan in CI |
-| `G2` Dependencies | enforced | `osv-scanner` scan (`bun.lock`, `package-lock.json`) in CI |
-| `B1` Build | enforced | `bun run build` in CI |
-| `L1` Unit | planned | No unit suite wired |
-| `L2` Runtime | N/A | Static site; `/api/live` served via `worker.js` asset rewrite |
-| `L3` Integration | N/A | Static site without application API |
-| `L4` E2E | N/A | No Playwright suite in repo |
-| `P1` Package | N/A | Deployed as Cloudflare Worker, not an npm package |
-| `Z1` Gate | enforced | `quality / Z1: Gate` required status check on `main` |
-
-Docs remain `manual` review; release runs `release.yml` (`deploy-worker.yml`) and verifies live `https://gaga.hexly.ai/`. No husky hooks installed; `--no-verify` forbidden.
-
-## Resources / Isolation
-
-| Purpose | Port / resource | Isolation |
-|---|---|---|
-| Dev | 5177 Vite | local |
-| Preview | 4177 | local |
-
-Do not deploy remote `-test` Workers.
-
-## Operations / Release
-
-- Entry: `npm run deploy` or tag `v*.*.*`
-- Auth: Cloudflare account owner
-- Before ship: CI typecheck+build; live HTTP 200
-- Runbook: README + `release.yml` `verify-command`
+| Dev | `127.0.0.1:5177` (Vite), browser `localStorage` | Local only; no remote services |
+| Preview | `127.0.0.1:4177` (Vite preview), `dist/` | Local built-bundle verification |
+| Prod | `https://gaga.hexly.ai` (Worker `gagaya`) | Read-only checks unless deploy is authorized; no remote `-test` Workers |
 
 ## Retrospective
 
-| Kind | Where |
-|---|---|
-| Accident narrative | [Retrospective.md](Retrospective.md) |
-| Project-specific rule that will recur | one line here (cap ~10) |
-| Cross-project lesson | nmem / global `AGENTS.md` / `rules/` |
-| Deterministically checkable rule | hook or test, not prose |
+Record incident narratives in [Retrospective.md](Retrospective.md); promote recurring project constraints to `Invariants` above and deterministically checkable safeguards to tests or hooks.
