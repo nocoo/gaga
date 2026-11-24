@@ -12,11 +12,12 @@ bun install --frozen-lockfile   # or npm ci
 npm run dev                     # Vite --host, port 5177
 npm run preview                 # Vite preview --host, port 4177
 npm run typecheck               # S1: tsc --noEmit
+npm run lint                    # S2: Biome lint and format check
 npm run build                   # B1: tsc --noEmit && vite build
 npm run deploy                  # build + wrangler deploy (owner only)
 ```
 
-No `lint`, unit-test, or browser E2E script is configured.
+No unit-test or browser E2E script is configured.
 
 ## Invariants
 
@@ -33,18 +34,18 @@ No `lint`, unit-test, or browser E2E script is configured.
 
 Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (`quality / Z1: Gate` required on `main`, called by [.github/workflows/ci.yml](.github/workflows/ci.yml)). Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
 
-- **Enforced in CI**: `S1` (`bun run typecheck`), `S3` (SHA-pinned actions), `G1` (`gitleaks`), `G2` (`osv-scanner` on `bun.lock` + `package-lock.json`), `B1` (`bun run build`), `Z1` gate.
+- **Enforced in CI**: `S1` (`bun run typecheck`), `S2` (`bun run lint` via Biome), `S3` (SHA-pinned actions), `G1` (`gitleaks`), `G2` (`osv-scanner` on `bun.lock` + `package-lock.json`), `B1` (`bun run build`), `Z1` gate.
 - **Planned / manual**: `L1` Unit is `planned` (no unit suite wired); docs review is `manual`.
-- **N/A slots**: `S2` (no lint script), `L2`/`L3` (static asset app; `/api/live` is a Worker rewrite), `L4` (Playwright E2E removed; low-maintenance repo), `P1` (Cloudflare Worker, not an npm package).
+- **N/A slots**: `L2`/`L3` (static asset app; `/api/live` is a Worker rewrite), `L4` (Playwright E2E removed; low-maintenance repo), `P1` (Cloudflare Worker, not an npm package).
 - **Local hooks**: none installed (no `.husky/` or `.githooks/`); run `npm run typecheck` and `npm run build` before committing, and never use `--no-verify`.
 
 ## Resources & Isolation
 
-| Lane | Endpoint / State | Boundary |
-| --- | --- | --- |
-| Dev | `127.0.0.1:5177` (Vite), browser `localStorage` | Local only; no remote services |
-| Preview | `127.0.0.1:4177` (Vite preview), `dist/` | Local built-bundle verification |
-| Prod | `https://gaga.hexly.ai` (Worker `gagaya`) | Read-only checks unless deploy is authorized; no remote `-test` Workers |
+| Lane    | Endpoint / State                                | Boundary                                                                |
+| ------- | ----------------------------------------------- | ----------------------------------------------------------------------- |
+| Dev     | `127.0.0.1:5177` (Vite), browser `localStorage` | Local only; no remote services                                          |
+| Preview | `127.0.0.1:4177` (Vite preview), `dist/`        | Local built-bundle verification                                         |
+| Prod    | `https://gaga.hexly.ai` (Worker `gagaya`)       | Read-only checks unless deploy is authorized; no remote `-test` Workers |
 
 ## Retrospective
 

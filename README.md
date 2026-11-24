@@ -36,17 +36,17 @@ Gaga（陶陶的小小世界）是一个网页 3D 玩耍空间。虚拟角色陶
 
 在支持 WebGL 2、已开启硬件加速的现代浏览器中打开[站点](https://gaga.hexly.ai)。陶陶会自行探索，也可点击场景中的玩具或打开「玩具百宝箱」。
 
-| 操作 | 效果 |
-| --- | --- |
-| 拖动画面 / 单指拖动 | 旋转视角 |
-| 滚轮 / 双指捏合 / 缩放按钮 | 放大、缩小 |
-| 点击玩具 / 玩具百宝箱 | 引导陶陶去玩 |
-| 点击陶陶头像 | 切换近距离跟随与全景 |
-| Space | 暂停或继续 |
-| R | 恢复初始视角 |
-| T | 打开玩具百宝箱 |
-| M | 开关环境音乐 |
-| N | 切换昼夜 |
+| 操作                       | 效果                 |
+| -------------------------- | -------------------- |
+| 拖动画面 / 单指拖动        | 旋转视角             |
+| 滚轮 / 双指捏合 / 缩放按钮 | 放大、缩小           |
+| 点击玩具 / 玩具百宝箱      | 引导陶陶去玩         |
+| 点击陶陶头像               | 切换近距离跟随与全景 |
+| Space                      | 暂停或继续           |
+| R                          | 恢复初始视角         |
+| T                          | 打开玩具百宝箱       |
+| M                          | 开关环境音乐         |
+| N                          | 切换昼夜             |
 
 城堡和木马互动中选择其他玩具时，会先把下一站排队，完成当前动作并回到地面后再出发。选择玩具也会让暂停中的陶陶继续活动。
 
@@ -73,13 +73,13 @@ npm run preview
 
 开发模式提供 `window.__TAOTAO__` 诊断接口，生产构建不会导出它。
 
-| 路径 | 内容 |
-| --- | --- |
-| `src/main.ts`、`src/ui`、`src/style.css` | 启动、错误提示、界面与足迹 |
-| `src/world` | 渲染、相机、房间、拾取与寻路 |
-| `src/world/toys` | 玩具模型、互动路径与注册表 |
-| `src/character` | 角色、探索逻辑与动作片段 |
-| `src/audio/Soundscape.ts` | 合成音乐与玩具音效 |
+| 路径                                     | 内容                         |
+| ---------------------------------------- | ---------------------------- |
+| `src/main.ts`、`src/ui`、`src/style.css` | 启动、错误提示、界面与足迹   |
+| `src/world`                              | 渲染、相机、房间、拾取与寻路 |
+| `src/world/toys`                         | 玩具模型、互动路径与注册表   |
+| `src/character`                          | 角色、探索逻辑与动作片段     |
+| `src/audio/Soundscape.ts`                | 合成音乐与玩具音效           |
 
 ## 技术栈
 
@@ -88,12 +88,12 @@ npm run preview
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?logo=cloudflare&logoColor=white)
 
-| 部分 | 实现 |
-| --- | --- |
+| 部分       | 实现                                       |
+| ---------- | ------------------------------------------ |
 | 场景与角色 | TypeScript、Three.js、WebGL 2、Canvas 纹理 |
-| 界面 | DOM、CSS、SVG |
-| 音频与足迹 | Web Audio、localStorage |
-| 构建与托管 | Vite、Cloudflare Workers Static Assets |
+| 界面       | DOM、CSS、SVG                              |
+| 音频与足迹 | Web Audio、localStorage                    |
+| 构建与托管 | Vite、Cloudflare Workers Static Assets     |
 
 ## 文档
 

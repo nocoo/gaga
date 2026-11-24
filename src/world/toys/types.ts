@@ -1,12 +1,21 @@
-import type * as THREE from 'three';
+import type * as THREE from "three";
 
-export type ToyId = 'blocks' | 'books' | 'train' | 'ball' | 'castle' | 'rocker' | 'music' | 'rings';
-export type ActionId = 'build' | 'read' | 'train' | 'roll' | 'climb' | 'rock' | 'music' | 'stack';
-export type ToyCategory = '想象力' | '动起来' | '慢时光';
+export type ToyId = "blocks" | "books" | "train" | "ball" | "castle" | "rocker" | "music" | "rings";
+export type ActionId = "build" | "read" | "train" | "roll" | "climb" | "rock" | "music" | "stack";
+export type ToyCategory = "想象力" | "动起来" | "慢时光";
 
-export interface Obstacle { x: number; z: number; width: number; depth: number }
+export interface Obstacle {
+  x: number;
+  z: number;
+  width: number;
+  depth: number;
+}
 export interface ToyUpdate {
-  time: number; delta: number; active: boolean; progress: number; elapsed: number;
+  time: number;
+  delta: number;
+  active: boolean;
+  progress: number;
+  elapsed: number;
   hands?: { left: THREE.Vector3; right: THREE.Vector3 };
 }
 export interface ToyModel {

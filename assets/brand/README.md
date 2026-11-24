@@ -4,14 +4,14 @@ Before the next hop. One native 2048 × 2048 Azure gpt-image-2 request. The owne
 
 ## Use by surface
 
-| Surface | Asset | Treatment |
-| --- | --- | --- |
-| README / large gallery | `assets/brand/icon-rounded.png` | Selected rounded presentation at 128 px in README |
-| Browser identity | `public/favicon.png and favicon.ico` | Transparent rabbit; former SVG source remains archived in Hexly |
-| Product preview | `preview.jpg` | Existing product screenshot preserved |
-| Browser favicon | `public/favicon.png and favicon.ico` | Transparent 32 px PNG and decoded 16/32/48 ICO |
-| Apple touch | `public/apple-touch-icon.png` | Opaque square 180 px presentation |
-| Social | `public/opengraph-image.png` | Rounded presentation on a 1200 × 630 canvas |
+| Surface                | Asset                                | Treatment                                                       |
+| ---------------------- | ------------------------------------ | --------------------------------------------------------------- |
+| README / large gallery | `assets/brand/icon-rounded.png`      | Selected rounded presentation at 128 px in README               |
+| Browser identity       | `public/favicon.png and favicon.ico` | Transparent rabbit; former SVG source remains archived in Hexly |
+| Product preview        | `preview.jpg`                        | Existing product screenshot preserved                           |
+| Browser favicon        | `public/favicon.png and favicon.ico` | Transparent 32 px PNG and decoded 16/32/48 ICO                  |
+| Apple touch            | `public/apple-touch-icon.png`        | Opaque square 180 px presentation                               |
+| Social                 | `public/opengraph-image.png`         | Rounded presentation on a 1200 × 630 canvas                     |
 
 Root `logo.png` is the canonical 2048 × 2048 transparent foreground. `assets/brand/icon.png` and `icon-rounded.png` preserve the independent square and rounded presentation. Small UI and browser marks use the foreground with its original proportions and alpha, without a background tile, glow, color filter or additional mask. Native app and touch icons follow their platform's separate masking contract.
 

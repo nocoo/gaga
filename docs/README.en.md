@@ -36,17 +36,17 @@ The daily journal uses the current browser's localStorage, so today's discoverie
 
 Open the [site](https://gaga.hexly.ai) in a modern WebGL 2 browser with hardware acceleration enabled. Taotao explores on his own, or you can click a toy in the room or open the toy box.
 
-| Action | Effect |
-| --- | --- |
-| Drag / one-finger drag | Orbit the camera |
-| Wheel / pinch / zoom buttons | Zoom in or out |
-| Click a toy / choose from the toy box | Guide Taotao to play |
-| Click Taotao's avatar | Toggle close follow and the wide view |
-| Space | Pause or resume |
-| R | Reset the camera |
-| T | Open the toy box |
-| M | Toggle ambient music |
-| N | Switch day and night |
+| Action                                | Effect                                |
+| ------------------------------------- | ------------------------------------- |
+| Drag / one-finger drag                | Orbit the camera                      |
+| Wheel / pinch / zoom buttons          | Zoom in or out                        |
+| Click a toy / choose from the toy box | Guide Taotao to play                  |
+| Click Taotao's avatar                 | Toggle close follow and the wide view |
+| Space                                 | Pause or resume                       |
+| R                                     | Reset the camera                      |
+| T                                     | Open the toy box                      |
+| M                                     | Toggle ambient music                  |
+| N                                     | Switch day and night                  |
 
 Choosing another toy during a castle or rocking-horse interaction queues the next stop. Taotao finishes the current action and returns to the floor before leaving. Selecting a toy also resumes activity when paused.
 
@@ -73,13 +73,13 @@ Build output goes to `dist/`, currently hosted on Cloudflare Workers Static Asse
 
 Development exposes the `window.__TAOTAO__` diagnostic interface. Production builds do not export it.
 
-| Path | Contents |
-| --- | --- |
-| `src/main.ts`, `src/ui`, `src/style.css` | Startup, error messages, interface, and journal |
-| `src/world` | Rendering, camera, room, picking, and navigation |
-| `src/world/toys` | Toy models, interaction paths, and registry |
-| `src/character` | Character, exploration logic, and animation clips |
-| `src/audio/Soundscape.ts` | Synthesized music and toy sounds |
+| Path                                     | Contents                                          |
+| ---------------------------------------- | ------------------------------------------------- |
+| `src/main.ts`, `src/ui`, `src/style.css` | Startup, error messages, interface, and journal   |
+| `src/world`                              | Rendering, camera, room, picking, and navigation  |
+| `src/world/toys`                         | Toy models, interaction paths, and registry       |
+| `src/character`                          | Character, exploration logic, and animation clips |
+| `src/audio/Soundscape.ts`                | Synthesized music and toy sounds                  |
 
 ## Stack
 
@@ -88,12 +88,12 @@ Development exposes the `window.__TAOTAO__` diagnostic interface. Production bui
 ![Vite](https://img.shields.io/badge/Vite-646CFF?logo=vite&logoColor=white)
 ![Cloudflare Workers](https://img.shields.io/badge/Cloudflare_Workers-F38020?logo=cloudflare&logoColor=white)
 
-| Area | Implementation |
-| --- | --- |
+| Area                | Implementation                                 |
+| ------------------- | ---------------------------------------------- |
 | Scene and character | TypeScript, Three.js, WebGL 2, Canvas textures |
-| Interface | DOM, CSS, SVG |
-| Audio and journal | Web Audio, localStorage |
-| Build and hosting | Vite, Cloudflare Workers Static Assets |
+| Interface           | DOM, CSS, SVG                                  |
+| Audio and journal   | Web Audio, localStorage                        |
+| Build and hosting   | Vite, Cloudflare Workers Static Assets         |
 
 ## Documentation
 
