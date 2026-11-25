@@ -62,7 +62,7 @@ a {
   text-decoration: none;
 }
 [hidden] {
-  display: none;
+  display: none !important;
 }
 svg {
   display: block;
@@ -1824,8 +1824,8 @@ kbd {
   *,
   *::before,
   *::after {
-    animation: none;
-    transition: none;
-    scroll-behavior: auto;
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
   }
 }
