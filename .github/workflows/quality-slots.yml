@@ -82,7 +82,7 @@ jobs:
           bun-version: ${{ env.BUN_VERSION }}
           node-version: ${{ env.NODE_VERSION }}
           install-policy: project
-      - run: bun run build
+      - run: ./node_modules/.bin/vite build
 
   l1-unit:
     name: "L1: Unit"
