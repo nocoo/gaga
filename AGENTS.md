@@ -34,9 +34,9 @@ No unit-test or browser E2E script is configured.
 
 Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (`quality / Z1: Gate` required on `main`, called by [.github/workflows/ci.yml](.github/workflows/ci.yml)). Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
 
-- **Enforced in CI**: `S1` (`bun run typecheck`), `S2` (`bun run lint` via Biome), `S3` (SHA-pinned actions), `G1` (`gitleaks`), `G2` (`osv-scanner` on `bun.lock` + `package-lock.json`), `B1` (`bun run build`), `Z1` gate.
+- **Enforced in CI**: `S1` (`bun run typecheck`), `S2` (`bun run lint` via Biome), `S3` (SHA-pinned actions), `G1` (`gitleaks`), `G2` (`osv-scanner` on `bun.lock` + `package-lock.json`), `B1` (`bun run build`), `P1` (`wrangler deploy --dry-run` against built `dist/`), `Z1` gate (`nocoo/base-ci/.github/actions/z1-gate`).
 - **Planned / manual**: `L1` Unit is `planned` (no unit suite wired); docs review is `manual`.
-- **N/A slots**: `L2`/`L3` (static asset app; `/api/live` is a Worker rewrite), `L4` (Playwright E2E removed; low-maintenance repo), `P1` (Cloudflare Worker, not an npm package).
+- **N/A slots**: `L2`/`L3` (static asset app; `/api/live` is a Worker rewrite), `L4` (Playwright E2E removed; low-maintenance repo).
 - **Local hooks**: none installed (no `.husky/` or `.githooks/`); run `npm run typecheck` and `npm run build` before committing, and never use `--no-verify`.
 
 ## Resources & Isolation
