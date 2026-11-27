@@ -28,11 +28,11 @@ No unit-test or browser E2E script is configured.
 - Version source of truth is `package.json` `"version"` (`1.2.3`, displayed as `v1.2.3`); `window.__TAOTAO__` is dev-only.
 - Keep `bun.lock` and `package-lock.json` in sync when updating dependencies; CI `G2` scans both lockfiles.
 - Wrangler Worker name is `gagaya` ([wrangler.jsonc](wrangler.jsonc)); public custom domain is `gaga.hexly.ai` (`workers_dev` and `preview_urls` disabled).
-- Production deploy requires Cloudflare owner authorization via `npm run deploy`, tag `v*.*.*`, or [release.yml](.github/workflows/release.yml) (verifies live HTTP 200 on `https://gaga.hexly.ai/`).
+- Production deploy requires Cloudflare owner authorization via `npm run deploy` or [pipeline.yml](.github/workflows/pipeline.yml) (D1–D5 Worker deploy on `main` push or `workflow_dispatch` with `deploy=true`; verifies live HTTP 200 on `https://gaga.hexly.ai/`).
 
 ## Quality & Local Gates
 
-Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (`quality / Z1: Gate` required on `main`, called by [.github/workflows/ci.yml](.github/workflows/ci.yml)). Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
+Follows `system1-quality`; CI slot definitions and pinned `base-ci` revision live in [.github/workflows/quality-slots.yml](.github/workflows/quality-slots.yml) (`quality / Z1: Gate` required on `main`, called by [.github/workflows/pipeline.yml](.github/workflows/pipeline.yml), which also gates the D1–D5 `deploy` job on `main` behind `needs: [quality]`). Status vocabulary: `enforced`, `planned`, `manual`, `N/A`.
 
 - **Enforced in CI**: `S1` (`bun run typecheck`), `S2` (`bun run lint` via Biome), `S3` (SHA-pinned actions), `G1` (`gitleaks`), `G2` (`osv-scanner` on `bun.lock` + `package-lock.json`), `B1` (`bun run build`), `P1` (`wrangler deploy --dry-run` against built `dist/`), `Z1` gate (`nocoo/base-ci/.github/actions/z1-gate`).
 - **Planned / manual**: `L1` Unit is `planned` (no unit suite wired); docs review is `manual`.
